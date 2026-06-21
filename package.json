@@ -1,0 +1,24 @@
+{
+  "name": "kd-viz",
+  "productName": "KD_Viz",
+  "version": "0.1.0",
+  "description": "Fullscreen generative-art visualizer driven by live macOS system activity.",
+  "main": "src/main/index.js",
+  "type": "commonjs",
+  "scripts": {
+    "start": "electron .",
+    "dev": "electron . --dev",
+    "setup-gpu": "bash scripts/setup-sudoers.sh",
+    "build-helper": "bash scripts/build-helper.sh",
+    "make-icon": "electron scripts/make-icon.js",
+    "package": "bash scripts/build-app.sh"
+  },
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "systeminformation": "^5.23.5"
+  },
+  "devDependencies": {
+    "electron": "^31.7.7"
+  }
+}

@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>KD_Viz</title>
+  <style>
+    :root { color-scheme: dark; }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body { width: 100%; height: 100%; overflow: hidden; background: #05060a; }
+    body { cursor: none; }
+    body.show-cursor { cursor: default; }
+    #stage { position: fixed; inset: 0; display: block; }
+
+    #hud {
+      position: fixed; left: 16px; bottom: 14px;
+      font: 12px/1.5 ui-monospace, SFMono-Regular, Menlo, monospace;
+      color: rgba(255,255,255,0.78);
+      text-shadow: 0 1px 3px rgba(0,0,0,0.8);
+      pointer-events: none; white-space: pre;
+      letter-spacing: 0.02em;
+      transition: opacity 0.4s ease;
+    }
+    #hud.hidden { opacity: 0; }
+
+    #modeName {
+      position: fixed; right: 18px; bottom: 14px;
+      font: 600 13px/1.4 ui-monospace, Menlo, monospace;
+      color: rgba(255,255,255,0.55);
+      text-transform: uppercase; letter-spacing: 0.18em;
+      pointer-events: none; transition: opacity 0.4s ease;
+    }
+    #modeName.hidden { opacity: 0; }
+
+    #toast {
+      position: fixed; top: 50px; left: 50%; transform: translateX(-50%);
+      font: 600 12px/1.4 ui-monospace, Menlo, monospace;
+      color: #fff; background: rgba(255, 72, 0, 0.85);
+      padding: 6px 14px; border-radius: 999px;
+      letter-spacing: 0.08em; opacity: 0;
+      transition: opacity 0.3s ease; pointer-events: none;
+    }
+    #toast.show { opacity: 1; }
+
+    /* Persistent Claude token-usage bar, shown across all modes. */
+    #claudebar {
+      position: fixed; top: 12px; left: 50%; transform: translateX(-50%);
+      display: flex; align-items: center; gap: 12px;
+      font: 11px/1 ui-monospace, Menlo, monospace;
+      color: rgba(255,255,255,0.82);
+      background: rgba(10,12,18,0.55);
+      border: 1px solid rgba(255,255,255,0.08);
+      padding: 7px 14px; border-radius: 999px;
+      text-shadow: 0 1px 2px rgba(0,0,0,0.7);
+      pointer-events: none; white-space: nowrap;
+      transition: opacity 0.4s ease;
+      backdrop-filter: blur(8px);
+    }
+    #claudebar.hidden { opacity: 0; }
+    #claudebar .cb-tag { color: rgba(255,255,255,0.5); letter-spacing: 0.16em; font-weight: 600; }
+    #claudebar .cb-track {
+      width: 120px; height: 7px; border-radius: 999px;
+      background: rgba(255,255,255,0.10); overflow: hidden;
+    }
+    #claudebar .cb-fill { height: 100%; width: 0%; border-radius: 999px; transition: width 0.5s ease, background 0.5s ease; }
+    #claudebar .cb-sep { color: rgba(255,255,255,0.18); }
+    #claudebar .cb-dim { color: rgba(255,255,255,0.55); }
+    #claudebar .cb-strong { color: rgba(255,255,255,0.95); font-weight: 600; }
+  </style>
+</head>
+<body>
+  <canvas id="stage"></canvas>
+  <div id="claudebar" class="hidden">
+    <span class="cb-tag">CLAUDE</span>
+    <div class="cb-track"><div class="cb-fill"></div></div>
+    <span class="cb-ctx"></span>
+    <span class="cb-sep">·</span>
+    <span class="cb-cost"></span>
+    <span class="cb-sep">·</span>
+    <span class="cb-rate"></span>
+  </div>
+  <div id="hud"></div>
+  <div id="modeName"></div>
+  <div id="toast"></div>
+  <script type="module" src="./app.js"></script>
+</body>
+</html>

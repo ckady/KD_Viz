@@ -1,0 +1,82 @@
+{
+  "sampleIntervalMs": 1000,
+  "tempUnit": "F",
+  "defaultMode": "pulse",
+  "startFullscreen": true,
+  "hideCursorAfterMs": 3000,
+  "powermetrics": {
+    "enabled": true,
+    "intervalMs": 1000,
+    "samplers": ["gpu_power", "thermal", "cpu_power"]
+  },
+  "appleTemp": {
+    "enabled": true,
+    "intervalMs": 1000
+  },
+  "claude": {
+    "enabled": true,
+    "pollMs": 2000,
+    "throughputWindowSec": 60,
+    "pricing": {
+      "opus":    { "ctx": 1000000, "in": 5, "out": 25 },
+      "sonnet":  { "ctx": 1000000, "in": 3, "out": 15 },
+      "haiku":   { "ctx": 200000,  "in": 1, "out": 5 },
+      "default": { "ctx": 1000000, "in": 5, "out": 25 }
+    }
+  },
+  "normalization": {
+    "netBytesPerSecMax": 125000000,
+    "diskOpsPerSecMax": 3000,
+    "tempMaxC": 100,
+    "tempBaseC": 30
+  },
+  "smoothing": {
+    "ema": 0.35
+  },
+  "baseline": {
+    "windowSamples": 120,
+    "anomalyK": 2.5,
+    "minSamples": 20
+  },
+  "autoSwitch": {
+    "enabled": true,
+    "userOverrideMs": 30000,
+    "network": {
+      "mode": "disconnected",
+      "sustainSamples": 4
+    },
+    "thermal": {
+      "mode": "alert",
+      "sustainSamples": 3,
+      "cooldownSamples": 8,
+      "hardTempC": 107
+    }
+  },
+  "signals": {
+    "cpuTotal":   { "label": "CPU",        "color": "#ff5d73", "glyph": "ring" },
+    "cpuCore":    { "label": "Core",       "color": "#ff8c69", "glyph": "ring" },
+    "ramUsed":    { "label": "RAM",        "color": "#5dd6ff", "glyph": "disc" },
+    "memPressure":{ "label": "Mem Press",  "color": "#3a86ff", "glyph": "disc" },
+    "swapUsed":   { "label": "Swap",       "color": "#8338ec", "glyph": "disc" },
+    "gpu":        { "label": "GPU",        "color": "#b5ff5d", "glyph": "hex" },
+    "netUp":      { "label": "Net Up",     "color": "#ffd60a", "glyph": "arrowUp" },
+    "netDown":    { "label": "Net Down",   "color": "#ffea00", "glyph": "arrowDown" },
+    "diskRead":   { "label": "Disk R",     "color": "#06ffa5", "glyph": "triLeft" },
+    "diskWrite":  { "label": "Disk W",     "color": "#00c2a8", "glyph": "triRight" },
+    "temp":       { "label": "Temp",       "color": "#ff006e", "glyph": "flame" },
+    "thermal":    { "label": "Thermal",    "color": "#ff4800", "glyph": "flame" },
+    "fan":        { "label": "Fan",        "color": "#a0e7e5", "glyph": "fan" },
+    "procCount":  { "label": "Procs",      "color": "#c8c8ff", "glyph": "dot" }
+  },
+  "modes": {
+    "pulse":        { "tier": "light",  "fpsCap": 30 },
+    "constellation":{ "tier": "medium", "fpsCap": 45 },
+    "dashboard":    { "tier": "medium", "fpsCap": 30 },
+    "monitor":      { "tier": "medium", "fpsCap": 30 },
+    "flowfield":    { "tier": "heavy",  "fpsCap": 60 },
+    "odyssey":      { "tier": "heavy",  "fpsCap": 60 },
+    "face":         { "tier": "heavy",  "fpsCap": 60 },
+    "disconnected": { "tier": "light",  "fpsCap": 30 },
+    "alert":        { "tier": "light",  "fpsCap": 45 }
+  }
+}
