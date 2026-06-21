@@ -17,6 +17,8 @@
     "enabled": true,
     "pollMs": 2000,
     "throughputWindowSec": 60,
+    "fiveHourLimitUSD": 117.21,
+    "weeklyLimitUSD": 832.59,
     "pricing": {
       "opus":    { "ctx": 1000000, "in": 5, "out": 25 },
       "sonnet":  { "ctx": 1000000, "in": 3, "out": 15 },

@@ -37,6 +37,9 @@ function startClaudeUsage(config, onSample) {
   // Throughput ring: fresh-token events with timestamps.
   const events = []; // { t, fresh }
 
+  // Cost timeline for rolling 5h / 7d budget windows.
+  const costTimeline = []; // { t, cost }
+
   function rateFor(model) {
     const m = (model || '').toLowerCase();
     if (m.includes('opus')) return pricing.opus || pricing.default;
@@ -83,6 +86,7 @@ function startClaudeUsage(config, onSample) {
 
     if (new Date(t).toDateString() === today) { todayCost += cost; todayTokens += fresh; }
     events.push({ t, fresh });
+    costTimeline.push({ t, cost });
   }
 
   async function readNew(p, state) {
@@ -144,9 +148,17 @@ function startClaudeUsage(config, onSample) {
       }
 
       // Throughput over the trailing window.
-      const cutoff = Date.now() - windowSec * 1000;
+      const now = Date.now();
+      const cutoff = now - windowSec * 1000;
       while (events.length && events[0].t < cutoff) events.shift();
       const freshInWindow = events.reduce((a, e) => a + e.fresh, 0);
+
+      // Rolling 5h and 7d budget windows.
+      const h5 = now - 5 * 3600 * 1000;
+      const d7 = now - 7 * 24 * 3600 * 1000;
+      while (costTimeline.length && costTimeline[0].t < d7) costTimeline.shift();
+      const fiveHourCost = costTimeline.filter(e => e.t >= h5).reduce((s, e) => s + e.cost, 0);
+      const weekCost     = costTimeline.reduce((s, e) => s + e.cost, 0);
 
       onSample({
         available: true,
@@ -158,7 +170,9 @@ function startClaudeUsage(config, onSample) {
         session: activeState ? { cost: activeState.cost, tokens: activeState.tokens } : null,
         today: { cost: todayCost, tokens: todayTokens },
         allTime: { cost: allCost, tokens: allTokens },
-        throughputPerMin: (freshInWindow / windowSec) * 60
+        throughputPerMin: (freshInWindow / windowSec) * 60,
+        fiveHour: { cost: fiveHourCost },
+        week: { cost: weekCost }
       });
     } catch (err) {
       onSample({ available: false, reason: err.message });

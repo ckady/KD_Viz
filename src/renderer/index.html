@@ -63,6 +63,11 @@
       background: rgba(255,255,255,0.10); overflow: hidden;
     }
     #claudebar .cb-fill { height: 100%; width: 0%; border-radius: 999px; transition: width 0.5s ease, background 0.5s ease; }
+    #claudebar .cb-btrack {
+      width: 80px; height: 7px; border-radius: 999px;
+      background: rgba(255,255,255,0.10); overflow: hidden;
+    }
+    #claudebar .cb-bfill { height: 100%; width: 0%; border-radius: 999px; transition: width 0.5s ease, background 0.5s ease; }
     #claudebar .cb-sep { color: rgba(255,255,255,0.18); }
     #claudebar .cb-dim { color: rgba(255,255,255,0.55); }
     #claudebar .cb-strong { color: rgba(255,255,255,0.95); font-weight: 600; }
@@ -78,6 +83,9 @@
     <span class="cb-cost"></span>
     <span class="cb-sep">·</span>
     <span class="cb-rate"></span>
+    <span class="cb-sep">·</span>
+    <div class="cb-btrack"><div class="cb-bfill"></div></div>
+    <span class="cb-blabel"></span>
   </div>
   <div id="hud"></div>
   <div id="modeName"></div>

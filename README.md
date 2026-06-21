@@ -40,7 +40,7 @@ Both restore the previous mode when the condition clears. A manual key press
 temporarily overrides auto-switching so it doesn't fight you.
 
 ### Keys
-- `1`–`7` — select mode · `←` / `→` — cycle · `h` — toggle the HUD/labels · `c` — toggle the Claude token bar · `m` — move to next display · `Esc` — quit
+- `1`–`7` — select mode · `←` / `→` — cycle · `h` — toggle the HUD/labels · `c` — toggle the Claude token bar · `b` — cycle budget view (5h ↔ week) · `m` — move to next display · `Esc` — quit
 
 ## Claude token-usage bar
 
