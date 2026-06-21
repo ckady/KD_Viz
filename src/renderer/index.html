@@ -68,6 +68,11 @@
       background: rgba(255,255,255,0.10); overflow: hidden;
     }
     #claudebar .cb-bfill { height: 100%; width: 0%; border-radius: 999px; transition: width 0.5s ease, background 0.5s ease; }
+    #glowBorder {
+      position: fixed; inset: 0;
+      pointer-events: none;
+      transition: box-shadow 0.4s ease;
+    }
     #claudebar .cb-sep { color: rgba(255,255,255,0.18); }
     #claudebar .cb-dim { color: rgba(255,255,255,0.55); }
     #claudebar .cb-strong { color: rgba(255,255,255,0.95); font-weight: 600; }
@@ -75,6 +80,7 @@
 </head>
 <body>
   <canvas id="stage"></canvas>
+  <div id="glowBorder"></div>
   <div id="claudebar" class="hidden">
     <span class="cb-tag">CLAUDE</span>
     <div class="cb-track"><div class="cb-fill"></div></div>

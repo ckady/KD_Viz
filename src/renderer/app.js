@@ -52,7 +52,8 @@ async function main() {
   const config = await window.viz.getConfig();
 
   const hud = createHud(hudEl, config);
-  const claudeBar = createClaudeBar(claudeBarEl, config);
+  const glowEl = document.getElementById('glowBorder');
+  const claudeBar = createClaudeBar(claudeBarEl, glowEl, config);
 
   const manager = createModeManager({
     config,

@@ -26,7 +26,7 @@ function fmtCost(c) {
   return '$' + (c >= 100 ? c.toFixed(0) : c.toFixed(2));
 }
 
-export function createClaudeBar(el, config) {
+export function createClaudeBar(el, glowEl, config) {
   const fill = el.querySelector('.cb-fill');
   const ctxEl = el.querySelector('.cb-ctx');
   const costEl = el.querySelector('.cb-cost');
@@ -81,7 +81,46 @@ export function createClaudeBar(el, config) {
         bfill.style.background = heat(pct);
         blabel.innerHTML =
           `<span class="cb-strong">${fmtCost(spent)}</span>` +
-          `<span class="cb-dim">/${fmtCost(limit)} ${budgetView}</span>`;
+          `<span class="cb-dim">/${fmtCost(limit)}</span>` +
+          ` <span style="color:${heat(pct)}">${Math.round(pct * 100)}%</span>` +
+          `<span class="cb-dim"> ${budgetView}</span>`;
+      }
+
+      // Intensity for warning effects — driven by whichever limit is closer to the cap.
+      const fiveHourPct = limit5h   > 0 ? Math.min(1, ((c.fiveHour || {}).cost || 0) / limit5h)   : 0;
+      const weekPct     = limitWeek > 0 ? Math.min(1, ((c.week     || {}).cost || 0) / limitWeek) : 0;
+      const maxPct      = Math.max(fiveHourPct, weekPct);
+      const intensity   = Math.max(0, Math.min(1, (maxPct - 0.8) / 0.2));
+
+      // Rainbow screen-edge glow (independent of bar visibility).
+      if (glowEl) {
+        if (intensity === 0) {
+          glowEl.style.boxShadow = 'none';
+        } else {
+          const now   = performance.now();
+          const hue   = (now * 0.05) % 360;
+          const hue2  = (hue + 60) % 360;
+          const pulse = 0.6 + 0.4 * Math.sin(now * 0.0025);
+          const op    = intensity * pulse;
+          const sz    = 40 + 80 * intensity;
+          glowEl.style.boxShadow = [
+            `inset 0 0 ${sz}px ${sz * 0.3}px hsla(${hue},100%,60%,${op})`,
+            `inset 0 0 ${sz * 0.6}px ${sz * 0.15}px hsla(${hue2},100%,70%,${op * 0.6})`
+          ].join(', ');
+        }
+      }
+
+      // Pulsing font on the bar.
+      if (intensity === 0) {
+        el.style.transform = 'translateX(-50%)';
+        el.style.filter    = '';
+      } else {
+        const now    = performance.now();
+        const pulse  = 0.6 + 0.4 * Math.sin(now * 0.0025);
+        const scale  = 1 + 0.04 * intensity * pulse;
+        const bright = 1 + 0.5  * intensity * pulse;
+        el.style.transform = `translateX(-50%) scale(${scale})`;
+        el.style.filter    = `brightness(${bright})`;
       }
     }
   };
