@@ -55,6 +55,8 @@ API key needed:
   (5-min) / 2× (1-hour), with the 5m/1h split read from each turn.
 - **Throughput** — fresh tokens/min right now, a pulse of how hard Claude is working.
 
+  Note: If you want API usage too, you'd need to either pull from the Anthropic usage API (requires an API key in the app, which we deliberately avoided) or have your API-using code append entries to a local file in the same JSONL format.
+
 Model pricing and context windows are in `config/default.json` under `claude.pricing`
 (per-family: opus / sonnet / haiku / default) — edit if rates change.
 
