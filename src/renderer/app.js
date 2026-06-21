@@ -52,7 +52,7 @@ async function main() {
   const config = await window.viz.getConfig();
 
   const hud = createHud(hudEl, config);
-  const claudeBar = createClaudeBar(claudeBarEl);
+  const claudeBar = createClaudeBar(claudeBarEl, config);
 
   const manager = createModeManager({
     config,
@@ -88,6 +88,7 @@ async function main() {
   window.addEventListener('keydown', (e) => {
     if (e.key === 'h' || e.key === 'H') { setHud(!hudVisible); return; }
     if (e.key === 'c' || e.key === 'C') { claudeBar.toggle(); return; }
+    if (e.key === 'b' || e.key === 'B') { claudeBar.toggleBudget(); return; }
     if (e.key === 'Escape' || e.key === 'q') { /* dev convenience */ }
     manager.handleKey(e);
   });

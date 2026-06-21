@@ -26,15 +26,23 @@ function fmtCost(c) {
   return '$' + (c >= 100 ? c.toFixed(0) : c.toFixed(2));
 }
 
-export function createClaudeBar(el) {
+export function createClaudeBar(el, config) {
   const fill = el.querySelector('.cb-fill');
   const ctxEl = el.querySelector('.cb-ctx');
   const costEl = el.querySelector('.cb-cost');
   const rateEl = el.querySelector('.cb-rate');
+  const bfill  = el.querySelector('.cb-bfill');
+  const blabel = el.querySelector('.cb-blabel');
   let userHidden = false;
+  let budgetView = '5h';
+
+  const cfg = (config && config.claude) || {};
+  const limit5h   = cfg.fiveHourLimitUSD ?? 5.0;
+  const limitWeek = cfg.weeklyLimitUSD   ?? 40.0;
 
   return {
     toggle() { userHidden = !userHidden; },
+    toggleBudget() { budgetView = budgetView === '5h' ? 'week' : '5h'; },
     render() {
       const c = signalBus.claude();
       if (userHidden || !c || !c.available) {
@@ -62,6 +70,19 @@ export function createClaudeBar(el) {
 
       const rate = Math.round(c.throughputPerMin || 0);
       rateEl.innerHTML = `<span class="cb-strong">${fmtTok(rate)}</span> <span class="cb-dim">tok/min</span>`;
+
+      if (bfill && blabel) {
+        const spent = budgetView === '5h'
+          ? ((c.fiveHour || {}).cost || 0)
+          : ((c.week     || {}).cost || 0);
+        const limit = budgetView === '5h' ? limit5h : limitWeek;
+        const pct = limit > 0 ? Math.min(1, spent / limit) : 0;
+        bfill.style.width = (pct * 100).toFixed(1) + '%';
+        bfill.style.background = heat(pct);
+        blabel.innerHTML =
+          `<span class="cb-strong">${fmtCost(spent)}</span>` +
+          `<span class="cb-dim">/${fmtCost(limit)} ${budgetView}</span>`;
+      }
     }
   };
 }

@@ -49,7 +49,7 @@ raymarched SDF head: CPU→cranium neurons, GPU→eyes, network→mouth, netDown
 temp→cheeks flush red, fan→blue cooling wisps fighting the flush, disk R/W→spokes
 in/out of the head). Auto-only states:
 **disconnected** (network loss) and **alert** (thermal anomaly). `h` toggles
-HUD; `c` toggles the Claude token-usage bar; `m` moves to the next display;
+HUD; `c` toggles the Claude token-usage bar; `b` cycles budget view (5h ↔ week); `m` moves to the next display;
 `Esc` quits. Window launches on the display under the cursor
 (`getDisplayNearestPoint`).
 
