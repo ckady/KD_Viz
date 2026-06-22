@@ -153,12 +153,28 @@ function startClaudeUsage(config, onSample) {
       while (events.length && events[0].t < cutoff) events.shift();
       const freshInWindow = events.reduce((a, e) => a + e.fresh, 0);
 
-      // Rolling 5h and 7d budget windows.
-      const h5 = now - 5 * 3600 * 1000;
+      // Rolling 7d budget window.
       const d7 = now - 7 * 24 * 3600 * 1000;
       while (costTimeline.length && costTimeline[0].t < d7) costTimeline.shift();
-      const fiveHourCost = costTimeline.filter(e => e.t >= h5).reduce((s, e) => s + e.cost, 0);
-      const weekCost     = costTimeline.reduce((s, e) => s + e.cost, 0);
+      const weekCost = costTimeline.reduce((s, e) => s + e.cost, 0);
+
+      // 5-hour window: starts at first message after previous window expired.
+      // The window is not clock-based — it starts on first use and rolls forward.
+      // Algorithm: iterate window starts until we land in the current window.
+      const fiveHourMs = 5 * 3600 * 1000;
+      const sortedTimes = costTimeline.map(e => e.t).sort((a, b) => a - b);
+      let windowStart = now; // default: no messages → cost 0
+      if (sortedTimes.length > 0) {
+        let ws = sortedTimes[0];
+        while (ws + fiveHourMs < now) {
+          const expiry = ws + fiveHourMs;
+          const next = sortedTimes.find(t => t > expiry);
+          if (next == null) { ws = now; break; } // window expired, no new session yet
+          ws = next;
+        }
+        windowStart = ws;
+      }
+      const fiveHourCost = costTimeline.filter(e => e.t >= windowStart).reduce((s, e) => s + e.cost, 0);
 
       onSample({
         available: true,
